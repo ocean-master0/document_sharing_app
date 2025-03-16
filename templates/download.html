@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Download Document</h2>
+
+<form id="downloadForm" class="modern-form">
+    <div class="input-group">
+        <input type="text" name="code" placeholder="Enter Download Code" required>
+        <i class="fas fa-key input-icon"></i>
+    </div>
+    
+    <button type="submit" class="modern-btn">
+        <i class="fas fa-search"></i> Verify Code
+    </button>
+</form>
+
+<div id="message"></div>
+
+<div id="downloadInfo" class="result" style="display: none;">
+    <h3>Document Information</h3>
+    <p><strong>User:</strong> <span id="userName"></span> (ID: <span id="userId"></span>)</p>
+    <p><strong>Document:</strong> <span id="docName"></span></p>
+    
+    <a id="downloadLink" href="#" class="modern-btn" style="display: inline-block; margin-top: 20px; text-decoration: none;">
+        <i class="fas fa-file-download"></i> Download File
+    </a>
+</div>
+
+<div class="bento-grid">
+    <div class="bento-item glass-card">
+        <h3><i class="fas fa-shield-alt"></i> Secure Sharing</h3>
+        <p>Each download code can only be used once and expires after 7 days.</p>
+    </div>
+    
+    <div class="bento-item glass-card">
+        <h3><i class="fas fa-link"></i> Direct Access</h3>
+        <p>Get immediate access to shared documents with a single code.</p>
+    </div>
+    
+    <div class="bento-item glass-card">
+        <h3><i class="fas fa-user-lock"></i> Privacy First</h3>
+        <p>Your information is protected and only shared with intended recipients.</p>
+    </div>
+</div>
+{% endblock %}

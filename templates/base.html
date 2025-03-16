@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuShare - Secure Document Sharing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="toggle-container">
+        <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider"></span>
+        </label>
+        <span>Dark Mode</span>
+    </div>
+    
+    <div class="container">
+        <h1>Docu<span>Share</span></h1>
+        
+        <div class="nav-bar">
+            <a href="{{ url_for('index') }}" class="nav-item {% if request.path == '/' %}active{% endif %}">
+                <i class="fas fa-upload"></i> Upload Document
+            </a>
+            <a href="{{ url_for('download') }}" class="nav-item {% if request.path == '/download' %}active{% endif %}">
+                <i class="fas fa-download"></i> Download Document
+            </a>
+            <a href="{{ url_for('existing') }}" class="nav-item {% if request.path == '/existing' %}active{% endif %}">
+                <i class="fas fa-user"></i> Existing User
+            </a>
+            <a href="{{ url_for('forget') }}" class="nav-item {% if request.path == '/forget' %}active{% endif %}">
+                <i class="fas fa-key"></i> Recover User ID
+            </a>
+        </div>
+        
+        <div class="section-box">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

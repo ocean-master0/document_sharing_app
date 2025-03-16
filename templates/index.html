@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Upload Document</h2>
+
+<form class="modern-form" method="post">
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+    
+    <div class="input-group">
+        <input type="text" name="doc_name" placeholder="Document Name" required>
+        <i class="fas fa-file-alt input-icon"></i>
+    </div>
+    
+    <div class="input-group">
+        <input type="text" name="url" placeholder="Document URL" required>
+        <i class="fas fa-link input-icon"></i>
+    </div>
+    
+    <div class="input-group">
+        <input type="text" name="user_name" placeholder="Your Name" required>
+        <i class="fas fa-user input-icon"></i>
+    </div>
+    
+    <div class="checkbox-label">
+        <input type="checkbox" name="use_custom" id="useCustomId">
+        <label for="useCustomId">Use Custom User ID</label>
+    </div>
+    
+    <div class="input-group">
+        <input type="text" name="custom_user_id" id="customUserId" placeholder="Custom User ID (Optional)" disabled>
+        <i class="fas fa-id-card input-icon"></i>
+    </div>
+    
+    <button type="submit" class="modern-btn">
+        <i class="fas fa-cloud-upload-alt"></i> Generate Download Codes
+    </button>
+</form>
+
+{% if codes %}
+<div class="result">
+    <h3>User Information</h3>
+    <p><strong>User:</strong> {{ user_name }} (ID: {{ user_id }})</p>
+    <p><strong>Document:</strong> {{ doc_name }}</p>
+    <p><strong>URL:</strong> {{ url }}</p>
+    
+    <h3 style="margin-top: 25px;">Download Codes</h3>
+    <p>Share these codes with your recipients. Each code can be used once within 7 days.</p>
+    
+    <ul class="code-list">
+        {% for code in codes %}
+        <li class="float-effect">
+            {{ code }}
+            <button class="copy-btn" data-code="{{ code }}">
+                <i class="fas fa-copy"></i>
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <form action="{{ url_for('download_codes') }}" method="post" style="margin-top: 20px;">
+        {% for code in codes %}
+        <input type="hidden" name="codes[]" value="{{ code }}">
+        {% endfor %}
+        <input type="hidden" name="user_name" value="{{ user_name }}">
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+        <input type="hidden" name="url" value="{{ url }}">
+        <input type="hidden" name="doc_name" value="{{ doc_name }}">
+        <button type="submit" class="modern-btn secondary">
+            <i class="fas fa-file-download"></i> Download Codes as TXT
+        </button>
+    </form>
+    
+    {% if forget_codes %}
+    <div style="margin-top: 30px;">
+        <h3>ID Recovery Codes</h3>
+        <p>Save these codes to recover your User ID if forgotten. Each code can be used once within 7 days.</p>
+        
+        <ul class="code-list">
+            {% for code in forget_codes %}
+            <li class="float-effect">
+                {{ code }}
+                <button class="copy-btn" data-code="{{ code }}">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </li>
+            {% endfor %}
+        </ul>
+        
+        <form action="{{ url_for('download_forget_codes') }}" method="post" style="margin-top: 20px;">
+            {% for code in forget_codes %}
+            <input type="hidden" name="forget_codes[]" value="{{ code }}">
+            {% endfor %}
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <button type="submit" class="modern-btn secondary">
+                <i class="fas fa-file-download"></i> Download Recovery Codes as TXT
+            </button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

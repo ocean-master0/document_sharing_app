@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Recover User ID</h2>
+
+<div class="bento-grid">
+    <div class="bento-item glass-card">
+        <h3><i class="fas fa-key"></i> Use Recovery Code</h3>
+        <form class="modern-form" method="post" style="margin-top: 15px;">
+            <div class="input-group">
+                <input type="text" name="forget_code" placeholder="Enter Recovery Code" required>
+                <i class="fas fa-unlock-alt input-icon"></i>
+            </div>
+            
+            <button type="submit" class="modern-btn">
+                <i class="fas fa-search"></i> Retrieve User ID
+            </button>
+        </form>
+    </div>
+    
+    <div class="bento-item glass-card">
+        <h3><i class="fas fa-redo"></i> Generate New Codes</h3>
+        <form class="modern-form" method="post" style="margin-top: 15px;">
+            <div class="input-group">
+                <input type="text" name="user_id" placeholder="Your User ID" required>
+                <i class="fas fa-id-card input-icon"></i>
+            </div>
+            
+            <button type="submit" class="modern-btn">
+                <i class="fas fa-sync"></i> Generate Codes
+            </button>
+        </form>
+    </div>
+</div>
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+{% if retrieved_user_id %}
+<div class="result">
+    <h3>Your User ID</h3>
+    <div style="text-align: center; font-size: 24px; padding: 18px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; margin: 15px 0; font-weight: 700;">
+        <i class="fas fa-id-card"></i> {{ retrieved_user_id }}
+    </div>
+    <p style="text-align: center;">Please save this ID in a secure location.</p>
+</div>
+{% endif %}
+
+{% if forget_codes %}
+<div class="result">
+    <h3>New Recovery Codes</h3>
+    <p>User ID: <strong>{{ user_id }}</strong></p>
+    <p>Save these codes to recover your User ID if forgotten. Each code can be used once within 7 days.</p>
+    
+    <ul class="code-list">
+        {% for code in forget_codes %}
+        <li class="float-effect">
+            {{ code }}
+            <button class="copy-btn" data-code="{{ code }}">
+                <i class="fas fa-copy"></i>
+            </button>
+        </li>
+        {% endfor %}
+    </ul>
+    
+    <form action="{{ url_for('download_forget_codes') }}" method="post" style="margin-top: 20px;">
+        {% for code in forget_codes %}
+        <input type="hidden" name="forget_codes[]" value="{{ code }}">
+        {% endfor %}
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+        <button type="submit" class="modern-btn secondary">
+            <i class="fas fa-file-download"></i> Download Recovery Codes as TXT
+        </button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
