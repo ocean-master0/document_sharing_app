@@ -36,7 +36,7 @@
     
     <ul class="doc-list">
         {% for doc in existing_docs %}
-        <li class="float-effect">
+        <li>
             <span>{{ doc[1] }}</span>
             <div>
                 <a href="{{ doc[2] }}" target="_blank" class="modern-btn" style="padding: 8px 15px; font-size: 14px;">
@@ -56,7 +56,7 @@
         {% endfor %}
     </ul>
     
-    <!-- Delete User Account Section -->
+    <!-- Delete Account Section -->
     <div style="margin-top: 30px; border-top: 1px solid #CBD5E0; padding-top: 20px;">
         <h3 style="color: #E53E3E;">Delete Account</h3>
         <p>Warning: This will permanently delete your account and all associated documents and codes. This action cannot be undone.</p>
@@ -100,7 +100,7 @@
         
         <ul class="code-list">
             {% for code in codes %}
-            <li class="float-effect">
+            <li>
                 {{ code }}
                 <button class="copy-btn" data-code="{{ code }}">
                     <i class="fas fa-copy"></i>

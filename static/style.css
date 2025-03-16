@@ -196,7 +196,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #2d3748;
   }
   
   .doc-list li a {
@@ -397,5 +396,33 @@
   
   body.dark-mode .success-message {
     background-color: #38A169;
+  }
+  
+  /* Copy Button */
+  .copy-btn {
+    min-width: 40px;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: rgba(49, 130, 206, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: #3182ce;
+    transition: background-color 0.3s ease;
+  }
+  
+  .copy-btn:hover {
+    background: rgba(49, 130, 206, 0.2);
+  }
+  
+  body.dark-mode .copy-btn {
+    background: rgba(99, 179, 237, 0.1);
+    color: #63b3ed;
+  }
+  
+  body.dark-mode .copy-btn:hover {
+    background: rgba(99, 179, 237, 0.2);
   }
   
