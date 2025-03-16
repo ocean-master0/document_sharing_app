@@ -3,11 +3,16 @@
 {% block content %}
 <h2>Existing User</h2>
 
+{% if success_message %}
+<div class="success-message">{{ success_message }}</div>
+{% endif %}
+
+{% if error %}
+<div class="error">{{ error }}</div>
+{% endif %}
+
+{% if not existing_docs and not success_message %}
 <form class="modern-form" method="post">
-    {% if error %}
-    <div class="error">{{ error }}</div>
-    {% endif %}
-    
     <div class="input-group">
         <input type="text" name="user_id" placeholder="Your User ID" required>
         <i class="fas fa-id-card input-icon"></i>
@@ -22,6 +27,7 @@
         <i class="fas fa-sign-in-alt"></i> Sign In
     </button>
 </form>
+{% endif %}
 
 {% if existing_docs %}
 <div class="result">
@@ -49,6 +55,20 @@
         </li>
         {% endfor %}
     </ul>
+    
+    <!-- Delete User Account Section -->
+    <div style="margin-top: 30px; border-top: 1px solid #CBD5E0; padding-top: 20px;">
+        <h3 style="color: #E53E3E;">Delete Account</h3>
+        <p>Warning: This will permanently delete your account and all associated documents and codes. This action cannot be undone.</p>
+        
+        <form method="post" id="deleteUserForm" onsubmit="return confirmDeleteUser()">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <input type="hidden" name="delete_user" value="true">
+            <button type="submit" class="delete-btn" style="padding: 12px 20px; margin-top: 10px;">
+                <i class="fas fa-user-times"></i> Delete My Account
+            </button>
+        </form>
+    </div>
     
     <div style="margin-top: 30px;">
         <h3>Upload New Document</h3>
@@ -103,4 +123,10 @@
     {% endif %}
 </div>
 {% endif %}
+
+<script>
+    function confirmDeleteUser() {
+        return confirm("WARNING: This will permanently delete your account and all associated documents and codes. This action cannot be undone. Are you sure you want to proceed?");
+    }
+</script>
 {% endblock %}
