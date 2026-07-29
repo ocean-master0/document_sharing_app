@@ -4,6 +4,7 @@
 <h2>Upload document</h2>
 
 <form class="paper-form" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     {% if error %}
     <div class="form-error">{{ error }}</div>
     {% endif %}
@@ -92,11 +93,11 @@
 
     <div class="receipt-footer-actions">
         <form action="{{ url_for('download_codes') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             {% for code in codes %}
             <input type="hidden" name="codes[]" value="{{ code }}">
             {% endfor %}
             <input type="hidden" name="user_name" value="{{ user_name }}">
-            <input type="hidden" name="user_id" value="{{ user_id }}">
             <input type="hidden" name="url" value="{{ url }}">
             <input type="hidden" name="doc_name" value="{{ doc_name }}">
             <button type="submit" class="paper-btn secondary">
@@ -123,10 +124,10 @@
 
     <div class="receipt-footer-actions">
         <form action="{{ url_for('download_forget_codes') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             {% for code in forget_codes %}
             <input type="hidden" name="forget_codes[]" value="{{ code }}">
             {% endfor %}
-            <input type="hidden" name="user_id" value="{{ user_id }}">
             <button type="submit" class="paper-btn secondary">
                 <i class="bi bi-download"></i> Download .txt
             </button>

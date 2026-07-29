@@ -55,7 +55,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const downloadLink = document.getElementById('downloadLink');
                     if (userName) userName.textContent = data.user_name;
                     if (docName) docName.textContent = data.doc_name;
-                    if (downloadLink) downloadLink.href = data.url;
+                    if (downloadLink) {
+                        const allowedSchemes = ['https:', 'http:'];
+                        try {
+                            const parsedUrl = new URL(data.url);
+                            if (!allowedSchemes.includes(parsedUrl.protocol)) {
+                                throw new Error('Invalid URL scheme');
+                            }
+                            downloadLink.href = data.url;
+                        } catch {
+                            message.textContent = 'Invalid document URL received.';
+                            message.className = 'error';
+                            downloadLink.href = '#';
+                        }
+                    }
                     if (downloadInfo) { downloadInfo.style.display = 'block'; downloadInfo.classList.add('fade-in'); }
                 }
             })
@@ -89,20 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     button.innerHTML = originalHTML;
                 }, 1500);
             });
-        });
-    });
-
-    document.querySelectorAll('.require-pass').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const form = btn.closest('form');
-            const passInput = form.querySelector('.pass-input');
-            const promptMsg = btn.getAttribute('data-prompt') || 'Enter your password:';
-            const password = prompt(promptMsg);
-            if (!password) {
-                e.preventDefault();
-                return;
-            }
-            passInput.value = password;
         });
     });
 });

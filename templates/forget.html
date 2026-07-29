@@ -8,6 +8,7 @@
         <i class="bi bi-key feature-icon"></i>
         <h3>Use recovery code</h3>
         <form class="paper-form" method="post" style="margin-top: 15px;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="input-group">
                 <input type="text" name="forget_code" placeholder="Enter recovery code" required>
                 <i class="bi bi-unlock input-icon"></i>
@@ -22,6 +23,7 @@
         <i class="bi bi-arrow-repeat feature-icon"></i>
         <h3>Generate new codes</h3>
         <form class="paper-form" method="post" style="margin-top: 15px;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="input-group">
                 <input type="text" name="user_id" placeholder="Your user ID" required>
                 <i class="bi bi-person-badge input-icon"></i>
@@ -82,6 +84,7 @@
 
     <div class="receipt-footer-actions">
         <form action="{{ url_for('download_forget_codes') }}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             {% for code in forget_codes %}
             <input type="hidden" name="forget_codes[]" value="{{ code }}">
             {% endfor %}

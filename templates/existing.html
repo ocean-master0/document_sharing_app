@@ -12,15 +12,11 @@
 {% endif %}
 
 {% if not existing_docs and not success_message %}
-<form class="paper-form" method="post">
+<form class="paper-form" method="post" action="{{ url_for('login') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="input-group">
         <input type="text" name="user_id" placeholder="Your user ID" required>
         <i class="bi bi-person-badge input-icon"></i>
-    </div>
-
-    <div class="input-group">
-        <input type="text" name="user_name" placeholder="Your name" required>
-        <i class="bi bi-person input-icon"></i>
     </div>
 
     <div class="input-group">
@@ -47,22 +43,18 @@
                 <a href="{{ doc.url }}" target="_blank" class="paper-btn small">
                     <i class="bi bi-eye"></i> View
                 </a>
-                <form method="post" class="inline-form" style="display:inline">
-                    <input type="hidden" name="user_id" value="{{ user_id }}">
-                    <input type="hidden" name="user_name" value="{{ user_name }}">
-                    <input type="hidden" name="password" class="pass-input">
-                    <button type="submit" name="generate_codes" value="1" class="paper-btn small require-pass" data-prompt="Enter your password to generate new codes:" style="margin-left:4px">
+                <form method="post" action="{{ url_for('existing') }}" class="inline-form" style="display:inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" name="generate_codes" value="1" class="paper-btn small" style="margin-left:4px">
                         <i class="bi bi-files"></i> Codes
                     </button>
                     <input type="hidden" name="gen_url" value="{{ doc.url }}">
                     <input type="hidden" name="gen_doc_name" value="{{ doc.doc_name }}">
                 </form>
-                <form method="post" class="inline-form" style="display:inline">
+                <form method="post" action="{{ url_for('existing') }}" class="inline-form" style="display:inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="delete_doc_id" value="{{ doc.id }}">
-                    <input type="hidden" name="user_id" value="{{ user_id }}">
-                    <input type="hidden" name="user_name" value="{{ user_name }}">
-                    <input type="hidden" name="password" class="pass-input">
-                    <button type="submit" class="delete-btn require-pass" data-prompt="Enter your password to delete this document:">
+                    <button type="submit" class="delete-btn">
                         <i class="bi bi-trash"></i>
                     </button>
                 </form>
@@ -76,12 +68,10 @@
     <div class="danger-zone">
         <h3 class="danger-heading">Delete account</h3>
         <p class="warning-text">This will permanently delete your account and all associated documents and codes. This action cannot be undone.</p>
-        <form method="post" id="deleteUserForm">
-            <input type="hidden" name="user_id" value="{{ user_id }}">
-            <input type="hidden" name="user_name" value="{{ user_name }}">
-            <input type="hidden" name="password" class="pass-input">
+        <form method="post" action="{{ url_for('existing') }}" id="deleteUserForm" onsubmit="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="delete_user" value="true">
-            <button type="submit" class="delete-btn danger-btn require-pass" data-prompt="Enter your password to permanently delete your account:">
+            <button type="submit" class="delete-btn danger-btn">
                 <i class="bi bi-person-x"></i> Delete my account
             </button>
         </form>
@@ -90,10 +80,8 @@
     <div class="section-divider"></div>
 
     <h3>Upload new document</h3>
-    <form method="post" class="paper-form">
-        <input type="hidden" name="user_id" value="{{ user_id }}">
-        <input type="hidden" name="user_name" value="{{ user_name }}">
-        <input type="hidden" name="password" class="pass-input">
+    <form method="post" action="{{ url_for('existing') }}" class="paper-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
         <div class="input-group">
             <input type="text" name="doc_name" placeholder="Document name" required>
@@ -105,7 +93,12 @@
             <i class="bi bi-link-45deg input-icon"></i>
         </div>
 
-        <button type="submit" class="paper-btn primary require-pass" data-prompt="Enter your password to generate new codes:">
+        <div class="input-group">
+            <input type="text" name="user_name" placeholder="Your name" value="{{ user_name }}">
+            <i class="bi bi-person input-icon"></i>
+        </div>
+
+        <button type="submit" class="paper-btn primary">
             <i class="bi bi-cloud-arrow-up"></i> Generate new codes
         </button>
     </form>
@@ -132,11 +125,11 @@
 
         <div class="receipt-footer-actions">
             <form action="{{ url_for('download_codes') }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 {% for code in codes %}
                 <input type="hidden" name="codes[]" value="{{ code }}">
                 {% endfor %}
                 <input type="hidden" name="user_name" value="{{ user_name }}">
-                <input type="hidden" name="user_id" value="{{ user_id }}">
                 <button type="submit" class="paper-btn secondary">
                     <i class="bi bi-download"></i> Download .txt
                 </button>
@@ -151,5 +144,9 @@
 </div>
 {% endif %}
 
-
+<div class="nav-bar" style="margin-top: 16px;">
+    {% if existing_docs %}
+    <a href="{{ url_for('logout') }}" class="nav-item"><i class="bi bi-box-arrow-left"></i> <span>Logout</span></a>
+    {% endif %}
+</div>
 {% endblock %}
