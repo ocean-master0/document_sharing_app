@@ -1,104 +1,144 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Upload Document</h2>
+<h2>Upload document</h2>
 
-<form class="modern-form" method="post">
+<form class="paper-form" method="post">
     {% if error %}
-    <div class="error">{{ error }}</div>
+    <div class="form-error">{{ error }}</div>
     {% endif %}
-    
+
     <div class="input-group">
-        <input type="text" name="doc_name" placeholder="Document Name" required>
-        <i class="fas fa-file-alt input-icon"></i>
+        <input type="text" name="doc_name" placeholder="Document name" required>
+        <i class="bi bi-file-earmark-text input-icon"></i>
     </div>
-    
+
     <div class="input-group">
         <input type="text" name="url" placeholder="Document URL" required>
-        <i class="fas fa-link input-icon"></i>
+        <i class="bi bi-link-45deg input-icon"></i>
     </div>
-    
+
     <div class="input-group">
-        <input type="text" name="user_name" placeholder="Your Name" required>
-        <i class="fas fa-user input-icon"></i>
+        <input type="text" name="user_name" placeholder="Your name" required>
+        <i class="bi bi-person input-icon"></i>
     </div>
-    
-    <div class="checkbox-label">
-        <input type="checkbox" name="use_custom" id="useCustomId">
-        <label for="useCustomId">Use Custom User ID</label>
+
+    <div class="custom-id-row">
+        <label class="checkbox-label">
+            <input type="checkbox" name="use_custom" id="useCustomId">
+            <span>Use custom user ID</span>
+        </label>
+        <div class="input-group">
+            <input type="text" name="custom_user_id" id="customUserId" placeholder="Custom user ID (optional)" disabled>
+            <i class="bi bi-person-badge input-icon"></i>
+        </div>
     </div>
-    
+
     <div class="input-group">
-        <input type="text" name="custom_user_id" id="customUserId" placeholder="Custom User ID (Optional)" disabled>
-        <i class="fas fa-id-card input-icon"></i>
+        <input type="password" name="password" placeholder="Password (min 6 chars)" required minlength="6">
+        <i class="bi bi-lock input-icon"></i>
     </div>
-    
-    <button type="submit" class="modern-btn">
-        <i class="fas fa-cloud-upload-alt"></i> Generate Download Codes
+
+    <div class="input-group">
+        <input type="password" name="confirm_password" placeholder="Confirm password" required minlength="6">
+        <i class="bi bi-lock-fill input-icon"></i>
+    </div>
+
+    <button type="submit" class="paper-btn primary">
+        <i class="bi bi-cloud-arrow-up"></i> Generate download codes
     </button>
 </form>
 
 {% if codes %}
-<div class="result">
-    <h3>User Information</h3>
-    <p><strong>User:</strong> {{ user_name }} (ID: {{ user_id }})</p>
-    <p><strong>Document:</strong> {{ doc_name }}</p>
-    <p><strong>URL:</strong> {{ url }}</p>
-    
-    <h3 style="margin-top: 25px;">Download Codes</h3>
-    <p>Share these codes with your recipients. Each code can be used once within 7 days.</p>
-    
-    <ul class="code-list">
+<div class="receipt">
+    <div class="receipt-header">
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
+        <h3 class="receipt-title">Issuance receipt</h3>
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
+    </div>
+
+    <div class="receipt-body">
+        <div class="receipt-row">
+            <span class="receipt-label">User</span>
+            <span class="receipt-value">{{ user_name }}</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">User ID</span>
+            <span class="receipt-value mono">{{ user_id }}</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">Document</span>
+            <span class="receipt-value">{{ doc_name }}</span>
+        </div>
+        <div class="receipt-row">
+            <span class="receipt-label">URL</span>
+            <span class="receipt-value url">{{ url }}</span>
+        </div>
+    </div>
+
+    <div class="receipt-separator"><span>download codes</span></div>
+
+    <div class="codes-grid">
         {% for code in codes %}
-        <li class="float-effect">
-            {{ code }}
-            <button class="copy-btn" data-code="{{ code }}">
-                <i class="fas fa-copy"></i>
+        <div class="code-card">
+            <span class="code-card-value">{{ code }}</span>
+            <button class="code-card-copy" data-code="{{ code }}" title="Copy code">
+                <i class="bi bi-files"></i>
             </button>
-        </li>
+            <span class="code-card-num">#{{ loop.index }}</span>
+        </div>
         {% endfor %}
-    </ul>
-    
-    <form action="{{ url_for('download_codes') }}" method="post" style="margin-top: 20px;">
-        {% for code in codes %}
-        <input type="hidden" name="codes[]" value="{{ code }}">
-        {% endfor %}
-        <input type="hidden" name="user_name" value="{{ user_name }}">
-        <input type="hidden" name="user_id" value="{{ user_id }}">
-        <input type="hidden" name="url" value="{{ url }}">
-        <input type="hidden" name="doc_name" value="{{ doc_name }}">
-        <button type="submit" class="modern-btn secondary">
-            <i class="fas fa-file-download"></i> Download Codes as TXT
-        </button>
-    </form>
-    
-    {% if forget_codes %}
-    <div style="margin-top: 30px;">
-        <h3>ID Recovery Codes</h3>
-        <p>Save these codes to recover your User ID if forgotten. Each code can be used once within 7 days.</p>
-        
-        <ul class="code-list">
-            {% for code in forget_codes %}
-            <li class="float-effect">
-                {{ code }}
-                <button class="copy-btn" data-code="{{ code }}">
-                    <i class="fas fa-copy"></i>
-                </button>
-            </li>
+    </div>
+
+    <div class="receipt-footer-actions">
+        <form action="{{ url_for('download_codes') }}" method="post">
+            {% for code in codes %}
+            <input type="hidden" name="codes[]" value="{{ code }}">
             {% endfor %}
-        </ul>
-        
-        <form action="{{ url_for('download_forget_codes') }}" method="post" style="margin-top: 20px;">
+            <input type="hidden" name="user_name" value="{{ user_name }}">
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <input type="hidden" name="url" value="{{ url }}">
+            <input type="hidden" name="doc_name" value="{{ doc_name }}">
+            <button type="submit" class="paper-btn secondary">
+                <i class="bi bi-download"></i> Download .txt
+            </button>
+        </form>
+    </div>
+
+    {% if forget_codes %}
+    <div class="receipt-separator"><span>recovery codes</span></div>
+    <p class="receipt-note">Save these codes to recover your user ID if forgotten. Each code can be used once within 7 days.</p>
+
+    <div class="codes-grid recovery">
+        {% for code in forget_codes %}
+        <div class="code-card recovery">
+            <span class="code-card-value">{{ code }}</span>
+            <button class="code-card-copy" data-code="{{ code }}" title="Copy code">
+                <i class="bi bi-files"></i>
+            </button>
+            <span class="code-card-num">#{{ loop.index }}</span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="receipt-footer-actions">
+        <form action="{{ url_for('download_forget_codes') }}" method="post">
             {% for code in forget_codes %}
             <input type="hidden" name="forget_codes[]" value="{{ code }}">
             {% endfor %}
             <input type="hidden" name="user_id" value="{{ user_id }}">
-            <button type="submit" class="modern-btn secondary">
-                <i class="fas fa-file-download"></i> Download Recovery Codes as TXT
+            <button type="submit" class="paper-btn secondary">
+                <i class="bi bi-download"></i> Download .txt
             </button>
         </form>
     </div>
     {% endif %}
+
+    <div class="receipt-footer">
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
+        <p class="receipt-validity">Each code valid for 7 days &middot; Single use only</p>
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
+    </div>
 </div>
 {% endif %}
 {% endblock %}

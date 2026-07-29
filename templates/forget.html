@@ -1,33 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Recover User ID</h2>
+<h2>Recover user ID</h2>
 
-<div class="bento-grid">
-    <div class="bento-item glass-card">
-        <h3><i class="fas fa-key"></i> Use Recovery Code</h3>
-        <form class="modern-form" method="post" style="margin-top: 15px;">
+<div class="feature-grid two-col">
+    <div class="feature-card">
+        <i class="bi bi-key feature-icon"></i>
+        <h3>Use recovery code</h3>
+        <form class="paper-form" method="post" style="margin-top: 15px;">
             <div class="input-group">
-                <input type="text" name="forget_code" placeholder="Enter Recovery Code" required>
-                <i class="fas fa-unlock-alt input-icon"></i>
+                <input type="text" name="forget_code" placeholder="Enter recovery code" required>
+                <i class="bi bi-unlock input-icon"></i>
             </div>
-            
-            <button type="submit" class="modern-btn">
-                <i class="fas fa-search"></i> Retrieve User ID
+            <button type="submit" class="paper-btn primary">
+                <i class="bi bi-search"></i> Retrieve user ID
             </button>
         </form>
     </div>
-    
-    <div class="bento-item glass-card">
-        <h3><i class="fas fa-redo"></i> Generate New Codes</h3>
-        <form class="modern-form" method="post" style="margin-top: 15px;">
+
+    <div class="feature-card">
+        <i class="bi bi-arrow-repeat feature-icon"></i>
+        <h3>Generate new codes</h3>
+        <form class="paper-form" method="post" style="margin-top: 15px;">
             <div class="input-group">
-                <input type="text" name="user_id" placeholder="Your User ID" required>
-                <i class="fas fa-id-card input-icon"></i>
+                <input type="text" name="user_id" placeholder="Your user ID" required>
+                <i class="bi bi-person-badge input-icon"></i>
             </div>
-            
-            <button type="submit" class="modern-btn">
-                <i class="fas fa-sync"></i> Generate Codes
+            <div class="input-group">
+                <input type="password" name="password" placeholder="Password" required minlength="6">
+                <i class="bi bi-lock input-icon"></i>
+            </div>
+            <button type="submit" class="paper-btn primary">
+                <i class="bi bi-arrow-repeat"></i> Generate codes
             </button>
         </form>
     </div>
@@ -38,41 +42,59 @@
 {% endif %}
 
 {% if retrieved_user_id %}
-<div class="result">
-    <h3>Your User ID</h3>
-    <div style="text-align: center; font-size: 24px; padding: 18px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; margin: 15px 0; font-weight: 700;">
-        <i class="fas fa-id-card"></i> {{ retrieved_user_id }}
+<div class="receipt" style="margin-top: 24px;">
+    <div class="receipt-header">
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
+        <h3 class="receipt-title">Your user ID</h3>
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
     </div>
-    <p style="text-align: center;">Please save this ID in a secure location.</p>
+
+    <div class="receipt-body" style="text-align: center;">
+        <div class="user-id-value">
+            <i class="bi bi-person-badge"></i> {{ retrieved_user_id }}
+        </div>
+        <p class="receipt-validity" style="margin-top: 12px;">Please save this ID in a secure location.</p>
+    </div>
 </div>
 {% endif %}
 
 {% if forget_codes %}
-<div class="result">
-    <h3>New Recovery Codes</h3>
-    <p>User ID: <strong>{{ user_id }}</strong></p>
-    <p>Save these codes to recover your User ID if forgotten. Each code can be used once within 7 days.</p>
-    
-    <ul class="code-list">
+<div class="receipt" style="margin-top: 24px;">
+    <div class="receipt-header">
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
+        <h3 class="receipt-title">Recovery codes</h3>
+        <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
+    </div>
+
+    <p class="receipt-note">User ID: <strong>{{ user_id }}</strong> &mdash; Save these codes to recover your user ID if forgotten. Each code can be used once within 7 days.</p>
+
+    <div class="codes-grid recovery">
         {% for code in forget_codes %}
-        <li class="float-effect">
-            {{ code }}
-            <button class="copy-btn" data-code="{{ code }}">
-                <i class="fas fa-copy"></i>
+        <div class="code-card recovery">
+            <span class="code-card-value">{{ code }}</span>
+            <button class="code-card-copy" data-code="{{ code }}" title="Copy code">
+                <i class="bi bi-files"></i>
             </button>
-        </li>
+            <span class="code-card-num">#{{ loop.index }}</span>
+        </div>
         {% endfor %}
-    </ul>
-    
-    <form action="{{ url_for('download_forget_codes') }}" method="post" style="margin-top: 20px;">
-        {% for code in forget_codes %}
-        <input type="hidden" name="forget_codes[]" value="{{ code }}">
-        {% endfor %}
-        <input type="hidden" name="user_id" value="{{ user_id }}">
-        <button type="submit" class="modern-btn secondary">
-            <i class="fas fa-file-download"></i> Download Recovery Codes as TXT
-        </button>
-    </form>
+    </div>
+
+    <div class="receipt-footer-actions">
+        <form action="{{ url_for('download_forget_codes') }}" method="post">
+            {% for code in forget_codes %}
+            <input type="hidden" name="forget_codes[]" value="{{ code }}">
+            {% endfor %}
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+            <button type="submit" class="paper-btn secondary">
+                <i class="bi bi-download"></i> Download .txt
+            </button>
+        </form>
+    </div>
+
+    <div class="receipt-footer">
+        <p class="receipt-validity">Each code valid for 7 days &middot; Single use only</p>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
