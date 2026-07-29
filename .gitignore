@@ -3,6 +3,8 @@ database.db
 *.db-journal
 *.db-wal
 *.db-shm
+.claude/skills/
+.agents/
 __pycache__/
 *.py[cod]
 .env
