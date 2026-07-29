@@ -5,6 +5,7 @@ database.db
 *.db-shm
 .claude/skills/
 .agents/
+skills-lock.json
 __pycache__/
 *.py[cod]
 .env
@@ -15,3 +16,7 @@ env/
 dist/
 build/
 .DS_Store
+report.md
+features.md
+schema.sql
+test_full.py

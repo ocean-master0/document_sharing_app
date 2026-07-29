@@ -24,7 +24,7 @@
     </div>
 
     <div class="input-group">
-        <input type="password" name="password" placeholder="Password" required minlength="6">
+        <input type="password" name="password" placeholder="Password" required minlength="8">
         <i class="bi bi-lock input-icon"></i>
     </div>
 
@@ -42,13 +42,23 @@
     <ul class="doc-list">
         {% for doc in existing_docs %}
         <li class="doc-item">
-            <span class="doc-name">{{ doc[1] }}</span>
+            <span class="doc-name">{{ doc.doc_name }}</span>
             <div class="doc-actions">
-                <a href="{{ doc[2] }}" target="_blank" class="paper-btn small">
+                <a href="{{ doc.url }}" target="_blank" class="paper-btn small">
                     <i class="bi bi-eye"></i> View
                 </a>
-                <form method="post" class="inline-form">
-                    <input type="hidden" name="delete_doc_id" value="{{ doc[0] }}">
+                <form method="post" class="inline-form" style="display:inline">
+                    <input type="hidden" name="user_id" value="{{ user_id }}">
+                    <input type="hidden" name="user_name" value="{{ user_name }}">
+                    <input type="hidden" name="password" class="pass-input">
+                    <button type="submit" name="generate_codes" value="1" class="paper-btn small require-pass" data-prompt="Enter your password to generate new codes:" style="margin-left:4px">
+                        <i class="bi bi-files"></i> Codes
+                    </button>
+                    <input type="hidden" name="gen_url" value="{{ doc.url }}">
+                    <input type="hidden" name="gen_doc_name" value="{{ doc.doc_name }}">
+                </form>
+                <form method="post" class="inline-form" style="display:inline">
+                    <input type="hidden" name="delete_doc_id" value="{{ doc.id }}">
                     <input type="hidden" name="user_id" value="{{ user_id }}">
                     <input type="hidden" name="user_name" value="{{ user_name }}">
                     <input type="hidden" name="password" class="pass-input">
@@ -104,7 +114,7 @@
     <div class="receipt" style="margin-top: 24px;">
         <div class="receipt-header">
             <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
-            <h3 class="receipt-title">New download codes</h3>
+            <h3 class="receipt-title">Download codes{% if show_codes_for %}: {{ show_codes_for }}{% endif %}</h3>
             <div class="receipt-ornament">&#10022; &#10022; &#10022;</div>
         </div>
 
